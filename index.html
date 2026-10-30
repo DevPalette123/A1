@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>استبانة قياس أثر الزيارة الصفية | مدرسة سيح المعاشي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo.png">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="bismillah">بسم الله الرحمن الرحيم</p>
+    <img class="logo" src="assets/logo.png" alt="شعار مدرسة سيح المعاشي">
+    <p class="school"><span>مدرسة سيح المعاشي للتعليم الأساسي <span class="nw">(<bdi dir="ltr">1-12</bdi>)</span></span></p>
+    <h1>استبانة قياس أثر الزيارة الصفية</h1>
+    <p class="intro"><span class="greet"><b>السلام عليكم ورحمة الله وبركاته،</b></span>
+      حرصًا على تعزيز التعاون وتبادل الخبرات المهنية بين معلمات العلوم والمعلمات في المواد الأخرى، يأتي هذا الاستبيان بهدف قياس أثر الزيارة الصفية بعد تنفيذها مباشرة، والتعرف إلى مدى استفادة المعلمة من الخبرات والممارسات التي تمت ملاحظتها، وانعكاسها على تطوير الممارسات التدريسية وتوسيع الخبرات المهنية.<br>
+      نأمل التكرم بالإجابة عن فقرات الاستبيان بموضوعية وصدق، بما يسهم في تقييم فاعلية الزيارات وتطويرها مستقبلًا وتحقيق أقصى استفادة منها في دعم النمو المهني وتحسين جودة التعليم والتعلم.<br>
+      <span class="thanks-line"><b>شاكرين لكن تعاونكن ومساهمتكن الفاعلة في التطوير المهني.</b></span></p>
+    <span class="pill-note">جميع الحقول مطلوبة</span>
+  </div>
+</header>
+
+<div class="progress" id="progress">
+  <div class="wrap inner">
+    <span id="progressText"></span>
+    <div class="bar"><i id="progressBar"></i></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <noscript><div class="notice error">تحتاج الاستبانة إلى تفعيل JavaScript في المتصفح.</div></noscript>
+  <div id="demoBanner"></div>
+
+  <form id="form" novalidate autocomplete="off">
+
+    <section class="card" id="sec-info">
+      <h2>بيانات الزيارة</h2>
+      <div class="field" id="f-visitor">
+        <label for="visitor">اسم المعلمة الزائرة</label>
+        <input type="text" id="visitor" maxlength="80">
+        <div class="err-msg">يرجى كتابة الاسم.</div>
+      </div>
+      <div class="field" id="f-visited">
+        <label for="visited">اسم المعلمة المزارة</label>
+        <input type="text" id="visited" maxlength="80">
+        <div class="err-msg">يرجى كتابة الاسم.</div>
+      </div>
+      <div class="field" id="f-date">
+        <label for="date">تاريخ الزيارة</label>
+        <input type="date" id="date">
+        <div class="err-msg">يرجى اختيار التاريخ.</div>
+      </div>
+      <div class="field" id="f-period">
+        <span class="lbl">الحصة</span>
+        <div class="choices periods" id="periods"></div>
+        <div class="err-msg">يرجى اختيار الحصة.</div>
+      </div>
+      <div class="field" id="f-grade">
+        <span class="lbl">الصف</span>
+        <div class="choices" id="grades"></div>
+        <div class="err-msg">يرجى اختيار الصف.</div>
+      </div>
+      <div class="field" id="f-subject">
+        <label for="subject">المادة</label>
+        <input type="text" id="subject" maxlength="80">
+        <div class="err-msg">يرجى كتابة المادة.</div>
+      </div>
+    </section>
+
+    <div id="sections"></div>
+
+    <section class="card" id="sec-best">
+      <h2>ما أبرز ممارسة أو فكرة استفدتِ منها خلال الزيارة؟</h2>
+      <div class="field" id="f-best">
+        <textarea id="best" maxlength="1000" aria-label="أبرز ممارسة أو فكرة"></textarea>
+        <div class="err-msg">يرجى كتابة إجابتك.</div>
+      </div>
+    </section>
+
+    <!-- حقل فخ للروبوتات: لا يراه المستخدم -->
+    <div class="hp" aria-hidden="true">
+      <label>اتركه فارغًا <input type="text" name="website" id="hp" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <div id="formError"></div>
+
+    <div class="submit-row">
+      <button class="btn gold" type="submit" id="submitBtn">إرسال الاستبانة</button>
+    </div>
+  </form>
+
+  <section class="card thanks" id="thanks" hidden>
+    <div class="check">✓</div>
+    <h2>شكرًا لمشاركتكن</h2>
+    <p>تم استلام إجابتك بنجاح، ومساهمتك تدعم تطوير الزيارات الصفية.</p>
+    <button class="btn ghost" id="againBtn" type="button">تعبئة استبانة أخرى</button>
+  </section>
+</main>
+
+<footer class="credit">
+  <b>إعداد معلم أول أحياء إيمان الهنائي</b>
+</footer>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  "use strict";
+  var C = window.SURVEY_CONFIG;
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, attrs, text) {
+    var e = document.createElement(tag);
+    if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function choice(box, type, name, value, label) {
+    var l = el("label", { "class": "choice" });
+    l.appendChild(el("input", { type: type, name: name, value: String(value) }));
+    l.appendChild(el("span", null, label));
+    box.appendChild(l);
+  }
+
+  /* ---------- بناء الواجهة ---------- */
+  C.PERIODS.forEach(function (p) { choice($("periods"), "radio", "period", p, String(p)); });
+  C.GRADES.forEach(function (g) { choice($("grades"), "radio", "grade", g, g); });
+
+  C.SECTIONS.forEach(function (sec, s) {
+    var card = el("section", { "class": "card", id: "c-s" + s });
+    var h2 = el("h2", null, sec.title);
+    card.appendChild(h2);
+    card.appendChild(el("p", { "class": "hint" }, "حدّدي العبارات التي تنطبق عليك (يمكن اختيار أكثر من عبارة)."));
+    var list = el("div", { "class": "choices vlist" });
+    sec.items.forEach(function (txt, i) { choice(list, "checkbox", "s" + s, i, txt); });
+    card.appendChild(list);
+    var tools = el("div", { "class": "sec-tools" });
+    tools.appendChild(el("button", { type: "button", "class": "link-btn", "data-s": String(s) }, "تحديد الكل"));
+    card.appendChild(tools);
+    card.appendChild(el("div", { "class": "err-msg" }, "يرجى تحديد عبارة واحدة على الأقل."));
+    $("sections").appendChild(card);
+  });
+  document.querySelectorAll(".sec-tools .link-btn").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var boxes = document.querySelectorAll('input[name="s' + b.dataset.s + '"]');
+      var every = Array.prototype.every.call(boxes, function (x) { return x.checked; });
+      boxes.forEach(function (x) { x.checked = !every; });
+      b.textContent = every ? "تحديد الكل" : "إلغاء التحديد";
+      refresh();
+    });
+  });
+
+  /* ---------- القراءة والتحقق ---------- */
+  function val(id) { return $(id).value.trim(); }
+  function radio(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : ""; }
+  function secChecks(s) {
+    return Array.prototype.map.call(document.querySelectorAll('input[name="s' + s + '"]'), function (x) { return x.checked; });
+  }
+  function states() {
+    return [
+      ["f-visitor", !!val("visitor")], ["f-visited", !!val("visited")], ["f-date", !!val("date")],
+      ["f-period", !!radio("period")], ["f-grade", !!radio("grade")], ["f-subject", !!val("subject")],
+      ["c-s0", secChecks(0).some(Boolean)], ["c-s1", secChecks(1).some(Boolean)], ["c-s2", secChecks(2).some(Boolean)],
+      ["f-best", !!val("best")]
+    ];
+  }
+  var touched = false;
+  function refresh() {
+    var st = states(), done = st.filter(function (x) { return x[1]; }).length;
+    $("progressText").textContent = "أنجزتِ " + done + " من " + st.length;
+    $("progressBar").style.width = Math.round(done / st.length * 100) + "%";
+    if (touched) st.forEach(function (x) { $(x[0]).classList.toggle("invalid", !x[1]); });
+  }
+  $("form").addEventListener("input", refresh);
+  $("form").addEventListener("change", refresh);
+
+  function showError(msg) { $("formError").innerHTML = ""; $("formError").appendChild(el("div", { "class": "notice error" }, msg)); }
+
+  /* ---------- الإرسال ---------- */
+  var sending = false;
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (sending) return;
+    $("formError").innerHTML = "";
+    touched = true; refresh();
+    var bad = states().filter(function (x) { return !x[1]; });
+    if (bad.length) {
+      showError("يرجى استكمال الحقول المظلّلة بالأحمر.");
+      $(bad[0][0]).scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    var payload = {
+      action: "submit", hp: $("hp").value,
+      visitor: val("visitor"), visited: val("visited"), date: val("date"),
+      period: Number(radio("period")), grade: radio("grade"), subject: val("subject"),
+      sections: [secChecks(0), secChecks(1), secChecks(2)], best: val("best")
+    };
+
+    if (!C.SCRIPT_URL) { finish(true); return; }          // وضع تجريبي
+
+    sending = true; var btn = $("submitBtn"); btn.disabled = true; btn.textContent = "جارٍ الإرسال…";
+    var ctrl = ("AbortController" in window) ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 25000);
+    fetch(C.SCRIPT_URL, { method: "POST", body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { return r.json(); })
+      .then(function (res) { clearTimeout(timer); if (res && res.ok) finish(false); else throw new Error("server"); })
+      .catch(function () {
+        clearTimeout(timer);
+        showError("تعذّر إرسال الاستبانة. تأكدي من الاتصال بالإنترنت ثم اضغطي «إرسال» مرة أخرى؛ إجاباتك ما زالت محفوظة في الصفحة.");
+      })
+      .then(function () { sending = false; btn.disabled = false; btn.textContent = "إرسال الاستبانة"; });
+  });
+
+  function finish(demo) {
+    $("form").hidden = true; $("progress").hidden = true;
+    $("thanks").hidden = false;
+    $("demoBanner").innerHTML = demo ? '<div class="notice demo"><b>وضع تجريبي:</b> لم يُرسل شيء لأن رابط Google Sheets (SCRIPT_URL) لم يُضبط بعد.</div>' : "";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $("againBtn").addEventListener("click", function () {
+    $("form").reset(); touched = false;
+    document.querySelectorAll(".invalid").forEach(function (x) { x.classList.remove("invalid"); });
+    document.querySelectorAll(".sec-tools .link-btn").forEach(function (b) { b.textContent = "تحديد الكل"; });
+    $("thanks").hidden = true; $("form").hidden = false; $("progress").hidden = false; $("demoBanner").innerHTML = "";
+    $("formError").innerHTML = "";
+    refresh(); window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>

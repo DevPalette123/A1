@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>لوحة نتائج الزيارة الصفية | مدرسة سيح المعاشي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo.png">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap wide inner">
+    <img src="assets/logo.png" alt="شعار مدرسة سيح المعاشي">
+    <div>
+      <h1>لوحة نتائج استبانة قياس أثر الزيارة الصفية</h1>
+      <div class="sub">مدرسة سيح المعاشي للتعليم الأساسي</div>
+    </div>
+    <span class="spacer"></span>
+    <button class="btn ghost small no-print" id="logoutBtn" type="button" hidden>خروج</button>
+  </div>
+</header>
+
+<!-- ============ الدخول ============ -->
+<section class="card login" id="loginBox">
+  <h2 style="justify-content:center">دخول الإدارة</h2>
+  <p class="hint" style="margin:0">هذه الصفحة مخصصة لمن يحق له الاطلاع على النتائج.</p>
+  <form id="loginForm" autocomplete="off">
+    <input type="password" id="pw" placeholder="كلمة المرور" aria-label="كلمة المرور" required>
+    <button class="btn" type="submit" id="loginBtn">دخول</button>
+  </form>
+  <div id="loginMsg"></div>
+</section>
+
+<!-- ============ اللوحة ============ -->
+<main class="wrap wide" id="dash" hidden>
+  <div class="toolbar no-print">
+    <select id="gradeFilter" aria-label="تصفية حسب الصف"></select>
+    <button class="btn small" id="refreshBtn" type="button">↻ تحديث</button>
+    <button class="btn gold small" id="csvBtn" type="button">⬇ تصدير CSV (Excel)</button>
+    <button class="btn ghost small" id="printBtn" type="button">🖨 طباعة / PDF</button>
+    <span class="spacer"></span>
+    <span class="stamp" id="stamp"></span>
+  </div>
+
+  <div id="emptyState" class="dash-card empty" hidden>
+    <h2>لا توجد إجابات بعد</h2>
+    <p>ستظهر الإحصائيات هنا بمجرد وصول أول استبانة.</p>
+  </div>
+
+  <div id="content">
+    <div class="kpis" id="kpis"></div>
+
+    <div class="tabs no-print" id="mainTabs" role="tablist">
+      <button class="tab" role="tab" data-p="0" aria-selected="true" type="button">نظرة عامة</button>
+      <button class="tab" role="tab" data-p="1" aria-selected="false" type="button">العبارات بالتفصيل</button>
+      <button class="tab" role="tab" data-p="2" aria-selected="false" type="button">الزيارات</button>
+      <button class="tab" role="tab" data-p="3" aria-selected="false" type="button">أبرز الممارسات</button>
+    </div>
+
+    <div data-panel="0">
+      <section class="dash-card">
+        <h2>أبرز النتائج</h2>
+        <p class="hint">ملخص يُولَّد تلقائيًا من الإجابات.</p>
+        <ul class="insights" id="insights"></ul>
+      </section>
+      <div class="grid2">
+        <section class="dash-card"><h2>نسبة تحقق كل محور</h2><p class="hint">متوسط نسبة العبارات التي حدّدتها المعلمات في المحور.</p><div id="axisBars"></div></section>
+        <section class="dash-card"><h2>أعلى ٥ عبارات تحديدًا</h2><p class="hint">حسب التصفية الحالية.</p><div id="topBars"></div></section>
+      </div>
+      <div class="grid2">
+        <section class="dash-card"><h2>الزيارات حسب الصف</h2><div id="gradeDonut"></div></section>
+        <section class="dash-card"><h2>الزيارات حسب الحصة</h2><div id="periodBars"></div></section>
+      </div>
+      <section class="dash-card"><h2>الزيارات عبر الأيام</h2><p class="hint">حسب تاريخ الزيارة.</p><div class="spark" id="spark"></div><div class="spark-labels" id="sparkLabels"></div></section>
+    </div>
+
+    <div data-panel="1" hidden>
+      <section class="dash-card">
+        <h2>نسبة تحديد كل عبارة</h2>
+        <p class="hint">من الأعلى إلى الأدنى، والنسبة من عدد الاستبانات.</p>
+        <div id="rankList"></div>
+      </section>
+      <div id="axisDetails"></div>
+    </div>
+
+    <div data-panel="2" hidden>
+      <section class="dash-card">
+        <h2>سجل الزيارات</h2>
+        <div class="toolbar" style="margin:6px 0 12px">
+          <input type="search" id="visitSearch" placeholder="بحث بالاسم أو المادة…" aria-label="بحث">
+          <span class="stamp" id="visitCount"></span>
+        </div>
+        <div class="tbl-scroll"><table class="tbl" id="visitTable"></table></div>
+      </section>
+      <section class="dash-card">
+        <h2>الزيارات حسب المادة</h2>
+        <div id="subjectBars"></div>
+      </section>
+    </div>
+
+    <div data-panel="3" hidden>
+      <section class="dash-card">
+        <h2>أبرز ممارسة أو فكرة تم الاستفادة منها</h2>
+        <div class="toolbar" style="margin:6px 0 12px">
+          <input type="search" id="bestSearch" placeholder="بحث في الإجابات…" aria-label="بحث">
+          <span class="stamp" id="bestCount"></span>
+        </div>
+        <div class="answers" id="answers"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="credit no-print">
+  <b>إعداد معلم أول أحياء إيمان الهنائي</b>
+</footer>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  "use strict";
+  var C = window.SURVEY_CONFIG;
+  var PW_KEY = "visit_dash_pw";
+  var $ = function (id) { return document.getElementById(id); };
+  var AR = "٠١٢٣٤٥٦٧٨٩";
+  function ar(n) { return String(n).replace(/\d/g, function (d) { return AR[d]; }); }
+  function fmt(x, d) { return x == null ? "—" : ar(Number(x).toFixed(d == null ? 0 : d)); }
+  function esc(s) { var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+  function pct(a, b) { return b ? Math.round(a / b * 100) : 0; }
+
+  var ITEMS = [];   // {text, axis, axisTitle, idx}
+  C.SECTIONS.forEach(function (sec, s) { sec.items.forEach(function (t, i) { ITEMS.push({ text: t, axis: s, axisTitle: sec.title, idx: s * 4 + i }); }); });
+  var PALETTE = ["#0b2a8a", "#b8935a", "#5b78c9", "#d8bd8c", "#3a4f9e", "#8f6f3d", "#9fb0e0", "#6b7a99", "#c9ced9"];
+  var state = { rows: [], generated: "", grade: "" };
+
+  /* ---------- صلاحية الصف ---------- */
+  function validRow(r) { return r && Array.isArray(r.marks) && r.marks.length === ITEMS.length; }
+  function filtered() { return state.rows.filter(function (r) { return validRow(r) && (!state.grade || r.grade === state.grade); }); }
+
+  /* ---------- الدخول ---------- */
+  function msg(html) { $("loginMsg").innerHTML = html ? '<div class="notice error">' + html + "</div>" : ""; }
+  function fetchResults(password) {
+    return fetch(C.SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "results", password: password }) }).then(function (r) { return r.json(); });
+  }
+  function enter(rows, generated) {
+    state.rows = rows; state.generated = generated || "";
+    $("loginBox").hidden = true; $("dash").hidden = false; $("logoutBtn").hidden = false;
+    fillGrade(); render();
+  }
+  $("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!C.SCRIPT_URL) { msg("لم يُربط الموقع بجدول Google Sheets بعد. أضيفي رابط السكربت في config.js."); return; }
+    var pw = $("pw").value;
+    $("loginBtn").disabled = true; $("loginBtn").textContent = "جارٍ التحقق…"; msg("");
+    fetchResults(pw).then(function (res) {
+      if (res && res.ok) { try { sessionStorage.setItem(PW_KEY, pw); } catch (x) {} enter(res.rows || [], res.generated); }
+      else if (res && res.error === "unauthorized") msg("كلمة المرور غير صحيحة.");
+      else msg("حدث خطأ غير متوقع. حاولي مرة أخرى.");
+    }).catch(function () { msg("تعذّر الاتصال بالخادم. تأكدي من الإنترنت ومن صحة رابط السكربت في config.js."); })
+      .then(function () { $("loginBtn").disabled = false; $("loginBtn").textContent = "دخول"; });
+  });
+  $("logoutBtn").addEventListener("click", function () { try { sessionStorage.removeItem(PW_KEY); } catch (x) {} window.location.reload(); });
+  $("refreshBtn").addEventListener("click", function () {
+    var pw = ""; try { pw = sessionStorage.getItem(PW_KEY) || ""; } catch (x) {}
+    var b = $("refreshBtn"); b.disabled = true; b.textContent = "جارٍ التحديث…";
+    fetchResults(pw).then(function (res) {
+      if (res && res.ok) { state.rows = res.rows || []; state.generated = res.generated || ""; fillGrade(); render(); }
+      else { try { sessionStorage.removeItem(PW_KEY); } catch (x) {} window.location.reload(); }
+    }).catch(function () { alert("تعذّر التحديث. تأكدي من الاتصال بالإنترنت."); })
+      .then(function () { b.disabled = false; b.textContent = "↻ تحديث"; });
+  });
+  $("printBtn").addEventListener("click", function () { window.print(); });
+  function fillGrade() {
+    $("gradeFilter").innerHTML = '<option value="">كل الصفوف</option>' + C.GRADES.map(function (g) {
+      return '<option value="' + esc(g) + '"' + (g === state.grade ? " selected" : "") + ">" + esc(g) + "</option>";
+    }).join("");
+  }
+  $("gradeFilter").addEventListener("change", function () { state.grade = this.value; render(); });
+
+  /* ---------- تصدير CSV ---------- */
+  function csvCell(v) { var s = String(v == null ? "" : v); if (/^[=+\-@]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; }
+  $("csvBtn").addEventListener("click", function () {
+    var head = ["التاريخ والوقت", "المعلمة الزائرة", "المعلمة المزارة", "تاريخ الزيارة", "الحصة", "الصف", "المادة"].concat(ITEMS.map(function (i) { return i.text; }), ["أبرز ممارسة أو فكرة"]);
+    var lines = [head.map(csvCell).join(",")];
+    state.rows.filter(validRow).forEach(function (r) {
+      lines.push([r.t, r.visitor, r.visited, r.date, r.period, r.grade, r.subject].concat(r.marks.map(function (m) { return m ? "✓" : ""; }), [r.best]).map(csvCell).join(","));
+    });
+    var blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "class-visits-" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  });
+
+  /* ---------- رسم ---------- */
+  function hbar(label, p, num, gold, cls) {
+    return '<div class="hbar ' + (cls || "") + '"><span>' + esc(label) + '</span><div class="track"><div class="fill' + (gold ? " gold" : "") + '" style="width:' + Math.max(0, Math.min(100, p)) + '%"></div></div><span class="num">' + num + "</span></div>";
+  }
+  function donut(items, centerNum, centerLabel) {
+    var total = items.reduce(function (s, it) { return s + it.count; }, 0);
+    var R = 44, CIRC = 2 * Math.PI * R, acc = 0, segs = "";
+    items.forEach(function (it) {
+      if (!it.count || !total) return;
+      var len = it.count / total * CIRC;
+      segs += '<circle cx="60" cy="60" r="' + R + '" fill="none" stroke="' + it.color + '" stroke-width="22" stroke-dasharray="' + len.toFixed(2) + " " + (CIRC - len).toFixed(2) +
+        '" stroke-dashoffset="' + (-acc).toFixed(2) + '" transform="rotate(-90 60 60)"><title>' + esc(it.label) + ": " + ar(it.count) + "</title></circle>";
+      acc += len;
+    });
+    var svg = '<svg viewBox="0 0 120 120" role="img" aria-label="رسم دائري"><circle cx="60" cy="60" r="' + R + '" fill="none" stroke="#eef1f8" stroke-width="22"/>' + segs +
+      '<text x="60" y="58" text-anchor="middle" font-size="20" font-weight="700" fill="#061a5c" style="font-family:inherit">' + ar(centerNum) + "</text>" +
+      '<text x="60" y="76" text-anchor="middle" font-size="9" fill="#5b6785" style="font-family:inherit">' + esc(centerLabel) + "</text></svg>";
+    var leg = items.filter(function (it) { return it.count; }).map(function (it) {
+      return '<div class="dl"><i style="background:' + it.color + '"></i><span>' + esc(it.label) + '</span><span class="dv">' + ar(it.count) + " (" + ar(pct(it.count, total)) + "٪)</span></div>";
+    }).join("");
+    return '<div class="donut-wrap"><div class="donut">' + svg + '</div><div class="dlegend">' + leg + "</div></div>";
+  }
+  function countBy(rows, key) { var m = {}; rows.forEach(function (r) { var k = r[key]; if (k !== "" && k != null) m[k] = (m[k] || 0) + 1; }); return m; }
+
+  /* ---------- الحساب ---------- */
+  function compute(rows) {
+    var n = rows.length, cnt = ITEMS.map(function () { return 0; });
+    rows.forEach(function (r) { r.marks.forEach(function (m, i) { if (m) cnt[i]++; }); });
+    var items = ITEMS.map(function (it, i) { return { text: it.text, axis: it.axis, idx: i, count: cnt[i], pct: pct(cnt[i], n) }; });
+    var axes = C.SECTIONS.map(function (sec, s) {
+      var sl = items.filter(function (x) { return x.axis === s; });
+      return { title: sec.title, pct: n ? sl.reduce(function (a, x) { return a + x.pct; }, 0) / sl.length : 0, items: sl };
+    });
+    var overall = n ? items.reduce(function (a, x) { return a + x.pct; }, 0) / items.length : 0;
+    var days = countBy(rows, "date"), dayList = Object.keys(days).sort().map(function (d) { return { day: d, count: days[d] }; });
+    return { n: n, items: items, ranked: items.slice().sort(function (a, b) { return b.pct - a.pct || a.idx - b.idx; }), axes: axes, overall: overall,
+      grades: countBy(rows, "grade"), periods: countBy(rows, "period"), subjects: countBy(rows, "subject"), days: dayList,
+      visitors: Object.keys(countBy(rows, "visitor")).length, visited: Object.keys(countBy(rows, "visited")).length };
+  }
+
+  var AXIS_SHORT = ["الاستفادة المهنية", "أثر الزيارة في الممارسة", "فاعلية الزيارة واستمراريتها"];
+
+  function render() {
+    var rows = filtered(), res = compute(rows);
+    $("stamp").innerHTML = state.generated ? 'آخر تحديث: <bdi dir="ltr">' + esc(ar(state.generated)) + "</bdi>" : "";
+    $("emptyState").hidden = res.n > 0;
+    $("content").hidden = res.n === 0;
+    if (res.n === 0) return;
+
+    var last = rows.reduce(function (m, r) { return String(r.t) > m ? String(r.t) : m; }, "");
+    $("kpis").innerHTML = [
+      { v: ar(res.n), l: state.grade ? "عدد الاستبانات لهذا الصف" : "إجمالي الاستبانات" },
+      { v: ar(Math.round(res.overall)) + "٪", l: "متوسط نسبة تحديد العبارات", c: true },
+      { v: ar(res.visitors), l: "معلمات زائرات" },
+      { v: ar(res.visited), l: "معلمات مزارات", c: true },
+      { v: last ? '<bdi dir="ltr" style="font-size:1.3rem">' + ar(last.slice(5, 16)) + "</bdi>" : "—", l: "آخر مشاركة" }
+    ].map(function (k) { return '<div class="kpi' + (k.c ? " gold" : "") + '"><div class="v">' + k.v + '</div><div class="l">' + k.l + "</div></div>"; }).join("");
+
+    var ins = [], t = res.ranked[0], b = res.ranked[res.ranked.length - 1];
+    ins.push("<li>أكثر عبارة تحديدًا: «" + esc(t.text) + "» (" + ar(t.pct) + "٪ من الاستبانات).</li>");
+    if (b.idx !== t.idx) ins.push("<li>أقل عبارة تحديدًا: «" + esc(b.text) + "» (" + ar(b.pct) + "٪).</li>");
+    var ax = res.axes.map(function (a, i) { return { i: i, pct: a.pct }; }).sort(function (x, y) { return y.pct - x.pct; });
+    ins.push("<li>أعلى المحاور: <b>" + esc(AXIS_SHORT[ax[0].i]) + "</b> (" + ar(Math.round(ax[0].pct)) + "٪)، وأقلها: <b>" + esc(AXIS_SHORT[ax[2].i]) + "</b> (" + ar(Math.round(ax[2].pct)) + "٪).</li>");
+    var tg = Object.keys(res.grades).sort(function (x, y) { return res.grades[y] - res.grades[x]; })[0];
+    if (tg) ins.push("<li>أكثر الصفوف زيارةً: <b>" + esc(tg) + "</b> (" + ar(res.grades[tg]) + " زيارة).</li>");
+    if (res.n < 5) ins.push('<li class="warn">عدد الاستبانات قليل (' + ar(res.n) + ") — لا تعمّمي النتائج.</li>");
+    $("insights").innerHTML = ins.join("");
+
+    $("axisBars").innerHTML = res.axes.map(function (a, i) { return hbar(AXIS_SHORT[i], a.pct, ar(Math.round(a.pct)) + "٪", i % 2 === 1); }).join("");
+    $("topBars").innerHTML = res.ranked.slice(0, 5).map(function (s) { return hbar(s.text, s.pct, ar(s.pct) + "٪", false, "long"); }).join("");
+
+    var gItems = C.GRADES.map(function (g, i) { return { label: g, count: res.grades[g] || 0, color: PALETTE[i % PALETTE.length] }; });
+    $("gradeDonut").innerHTML = donut(gItems, res.n, "زيارة");
+    var pmx = Math.max.apply(null, C.PERIODS.map(function (p) { return res.periods[p] || 0; }).concat([1]));
+    $("periodBars").innerHTML = C.PERIODS.map(function (p) { var c = res.periods[p] || 0; return hbar("الحصة " + ar(p), c / pmx * 100, ar(c) + " · " + ar(pct(c, res.n)) + "٪", false, "obar"); }).join("");
+
+    var dmx = res.days.reduce(function (m, d) { return Math.max(m, d.count); }, 1);
+    $("spark").innerHTML = res.days.map(function (d) { return '<div class="col" title="' + esc(d.day) + ": " + d.count + '" style="height:' + Math.max(6, d.count / dmx * 100) + '%"><span>' + ar(d.count) + "</span></div>"; }).join("");
+    $("sparkLabels").innerHTML = res.days.length ? "<span>" + esc(res.days[0].day) + "</span><span>" + esc(res.days[res.days.length - 1].day) + "</span>" : "";
+
+    $("rankList").innerHTML = res.ranked.map(function (s, i) { return hbar(ar(i + 1) + ". " + s.text, s.pct, ar(s.count) + " · " + ar(s.pct) + "٪", i < 3, "long"); }).join("");
+    $("axisDetails").innerHTML = res.axes.map(function (a) {
+      return '<section class="dash-card"><h2>' + esc(a.title) + '</h2><p class="hint">متوسط النسبة: ' + ar(Math.round(a.pct)) + "٪</p>" +
+        a.items.map(function (s) { return hbar(s.text, s.pct, ar(s.count) + " · " + ar(s.pct) + "٪", false, "long"); }).join("") + "</section>";
+    }).join("");
+
+    var sj = Object.keys(res.subjects).sort(function (x, y) { return res.subjects[y] - res.subjects[x]; }), smx = Math.max.apply(null, sj.map(function (k) { return res.subjects[k]; }).concat([1]));
+    $("subjectBars").innerHTML = sj.map(function (k) { return hbar(k, res.subjects[k] / smx * 100, ar(res.subjects[k]) + " · " + ar(pct(res.subjects[k], res.n)) + "٪", false); }).join("");
+
+    renderVisits(); renderBest();
+  }
+
+  function renderVisits() {
+    var term = $("visitSearch").value.trim();
+    var list = filtered().filter(function (r) { return !term || [r.visitor, r.visited, r.subject, r.grade].join(" ").indexOf(term) >= 0; }).reverse();
+    $("visitCount").textContent = ar(list.length) + " زيارة";
+    $("visitTable").innerHTML = "<tr><th>الزائرة</th><th>المزارة</th><th>التاريخ</th><th>الحصة</th><th>الصف</th><th>المادة</th></tr>" +
+      list.map(function (r) {
+        return "<tr><td>" + esc(r.visitor) + "</td><td>" + esc(r.visited) + '</td><td><bdi dir="ltr">' + esc(ar(r.date)) + "</bdi></td><td>" + ar(r.period) + "</td><td>" + esc(r.grade) + "</td><td>" + esc(r.subject) + "</td></tr>";
+      }).join("");
+  }
+  function renderBest() {
+    var term = $("bestSearch").value.trim();
+    var list = filtered().filter(function (r) { return r.best && (!term || r.best.indexOf(term) >= 0); });
+    $("bestCount").textContent = ar(list.length) + " إجابة";
+    $("answers").innerHTML = list.length
+      ? list.slice().reverse().map(function (r) { return '<div class="answer">' + esc(r.best) + "<small>" + esc(r.visitor) + " ← " + esc(r.visited) + " · " + esc(r.subject) + " · " + ar(String(r.t).slice(0, 16)) + "</small></div>"; }).join("")
+      : '<div class="empty">لا توجد إجابات مطابقة.</div>';
+  }
+  $("visitSearch").addEventListener("input", renderVisits);
+  $("bestSearch").addEventListener("input", renderBest);
+  $("mainTabs").addEventListener("click", function (e) {
+    var b = e.target.closest(".tab"); if (!b) return;
+    var p = b.getAttribute("data-p");
+    Array.prototype.forEach.call($("mainTabs").children, function (t) { t.setAttribute("aria-selected", t === b ? "true" : "false"); });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-panel]"), function (el) { el.hidden = el.getAttribute("data-panel") !== p; });
+  });
+
+  /* ---------- جلسة سابقة ---------- */
+  var saved = ""; try { saved = sessionStorage.getItem(PW_KEY) || ""; } catch (x) {}
+  if (saved && C.SCRIPT_URL) {
+    $("loginBox").hidden = true;
+    fetchResults(saved).then(function (res) {
+      if (res && res.ok) enter(res.rows || [], res.generated);
+      else { try { sessionStorage.removeItem(PW_KEY); } catch (x) {} $("loginBox").hidden = false; }
+    }).catch(function () { $("loginBox").hidden = false; });
+  }
+})();
+</script>
+</body>
+</html>
